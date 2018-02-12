@@ -117,4 +117,7 @@ For realistic purposes 100 msec delay is set as actuator latency. Without compen
 * `y`, there is no correction needed here because of it is in car-based coords
 * `psi`, this is where the magic happens, a correction of `-v / Lf * act_steering * dt` according to the kinematic equation solves the oscillation
 
-
+To make the full latency prediction the rest of the state variables were modified as well:
+* `v`, to take acceleration into account I added `act_accel * dt`
+* `cte`, needs the additional term `v * sin(epsi) * dt`
+* `epsi`, needs the additional term `- v / Lf * act_steering * dt`
