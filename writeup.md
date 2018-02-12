@@ -33,7 +33,7 @@ y[t+1] = y[t] + v[t] * sin(psi[t]) * dt
 psi[t+1] = psi[t] - v[t] / Lf * delta[t] * dt
 v[t+1] = v[t] + a[t] * dt
 cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
-epsi[t+1] = psi[t+1] - psides[t] - v[t] / Lf * delta[t] * dt
+epsi[t+1] = psi[t] - psides[t] - v[t] / Lf * delta[t] * dt
 ```
 
 The optimizer needs initial state variables, constraints and a cost function. For each MPC control loop calculation the initial state variables are the actual state variables. For each timestep in the prediction horizon the constraints must be kept zero and the costs are accumulated.
@@ -53,7 +53,7 @@ y[t+1] - (y[t] + v[t] * sin(psi[t]) * dt) = 0
 psi[t+1] - (psi[t] - v[t] / Lf * delta[t] * dt) = 0
 v[t+1] - (v[t] + a[t] * dt) = 0
 cte[t+1] - (f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt) = 0
-epsi[t+1] - (psi[t+1] - psides[t] - v[t] / Lf * delta[t] * dt) = 0
+epsi[t+1] - (psi[t] - psides[t] - v[t] / Lf * delta[t] * dt) = 0
 ```
 
 #### Cost function

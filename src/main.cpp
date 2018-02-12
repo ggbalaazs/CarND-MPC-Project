@@ -93,6 +93,7 @@ int main() {
           double v = j[1]["speed"];
           v *= 0.44704;   // mph >> meter/sec
           double act_steering = j[1]["steering_angle"];
+          double act_accel = j[1]["throttle"];
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
@@ -138,13 +139,26 @@ int main() {
           // but with latency
           const double dt = 0.1;
           const double Lf = 2.67;
+
+          // initial state variables without latency compensation
+          // state <<
+          //     0,    // position x
+          //     0,    // position y
+          //     0,    // car heading angle
+          //     v,    // velocity
+          //     cte,  // cross-track error
+          //     epsi; // car heading angle error
+
+          // initial state variables with latency compensation
           state <<
-              v * dt,                       // position x
-              0,                            // position y
-              -v / Lf * act_steering * dt,  // car heading angle
-              v,                            // velocity
-              cte,                          // cross-track error
-              epsi;                         // car heading angle error
+              v * dt,                                 // position x
+              0,                                      // position y
+              -v / Lf * act_steering * dt,            // car heading angle
+              v + act_accel * dt,                     // velocity
+              cte + v * sin(epsi) * dt,               // cross-track error
+              epsi - v / Lf * act_steering * dt;  // car heading angle error
+
+
 
           auto result = mpc.Solve(state, coeffs);
           steer_value = result[0];
